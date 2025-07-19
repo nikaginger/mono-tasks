@@ -1,69 +1,69 @@
-# React + TypeScript + Vite
+# mononote. App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание функционала
 
-Currently, two official plugins are available:
+Приложение "mononone." позволяет:
+- Создавать новые задачи с указанием:
+    - Заголовка (обязательно)
+    - Описания
+    - Категории (Bug/Feature/Documentation/Refactor/Test)
+    - Статуса (To Do/In Progress/Done)
+    - Приоритета (Low/Medium/High)
+- Редактировать существующие задачи
+- Удалять задачи
+- Просматривать список всех задач
+- Автоматическое сохранение задач в localStorage
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Инструкция по запуску
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Убедитесь, что у вас установлен Node.js (версия 16 или выше)
+2. Установите зависимости:
+```bash
+npm install
+```
+3. Запустите приложение в режиме разработки:
+```bash
+npm run dev
+```
+4. Для production-сборки:
+```bash
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Используемые технологии
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Основной стек:
+- React 18
+- TypeScript
+- Redux Toolkit (state management)
+- React Router (навигация)
+- Vite (сборка)
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Стилизация:
+- Tailwind CSS
+
+### Архитектура:
+- Feature-Sliced Design
+- Atomic Design (для компонентов)
+
+## Архитектура проекта
+
+Проект организован по принципам Feature-Sliced Design:
+
 ```
+src/
+├── app/                    # Инициализация приложения
+├── entities/               # Бизнес-сущности (Task)
+├── features/               # Фичи (task CRUD operations)
+├── pages/                  # Страницы приложения
+├── shared/                 # Общие модули
+│   ├── api/                # API клиент
+│   ├── lib/                # Вспомогательные функции
+│   ├── ui/                 # UI компоненты
+│   └── utils/              # Утилиты
+└── widgets/                # Виджеты (композиция фич)
+```
+
+## Демо
+
+[Посмотреть работающую версию приложения](https://mono-tasks.vercel.app/)

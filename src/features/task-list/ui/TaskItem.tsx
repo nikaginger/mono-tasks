@@ -1,7 +1,13 @@
-import type { Task } from '../../../entitites/task/types'
-import { Link } from 'react-router-dom'
+import type {Task} from '@entitites/task/types'
+import {Link} from 'react-router-dom'
+import { formatCreatedAt } from '@shared/utils/dateFormatting';
 
-export const TaskItem = ({ task }: { task: Task }) => {
+interface TaskItemProps {
+    task: Task;
+    onDelete?: (id: string) => void;
+}
+
+export const TaskItem = ({task, onDelete}: TaskItemProps ) => {
     return (
         <div className="p-4 mb-2 border h-full flex flex-col">
             <div className="mb-2">
@@ -18,19 +24,34 @@ export const TaskItem = ({ task }: { task: Task }) => {
                 {task.title}
             </h3>
 
+            {task.createdAt && (
+                <p className="font-ibmsans text-gray-300 text-xs">
+                    Created on {formatCreatedAt(task.createdAt)}
+                </p>
+            )}
+
             {task.description && (
-                <p className="font-ibmsans text-gray-500 my-2 line-clamp-3">
+                <p className="font-ibmsans text-gray-500 my-4 line-clamp-3">
                     {task.description}
                 </p>
             )}
 
-            <div className="mt-auto pt-3">
-                <Link
-                    to={`/tasks/${task.id}`}
-                    className="inline-block font-mono text-sm border-b border-black hover:border-transparent"
-                >
-                    EDIT
-                </Link>
+
+
+            <div className="flex flex-wrap mt-auto pt-3">
+                <div className="mt-auto pt-3 mr-auto">
+                    <Link
+                        to={`/tasks/${task.id}`}
+                        className="inline-block font-ibmmono text-sm border-b border-black hover:border-transparent"
+                    >
+                        EDIT
+                    </Link>
+                </div>
+                <button
+                    onClick={() => onDelete?.(task.id)}
+                    className="mt-auto pt-3 text-gray-500  uppercase inline-block font-ibmmono text-sm hover:text-red-600 cursor-pointer">
+                    delete
+                </button>
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-import type {TaskPriority, TaskStatus, TaskCategory} from "../../../entitites/task/types.ts";
+import type {TaskPriority, TaskStatus, TaskCategory} from "@entitites/task/types";
 import {useState} from "react";
 
 export interface TaskFilters {
@@ -59,7 +59,7 @@ export const TaskFilters = ({onFilterChange}: { onFilterChange: (filter: TaskFil
 
             <button
                 onClick={handleReset}
-                className="uppercase text-sm font-ibmmono bg-black text-white p-2 border border-black cursor-pointer"
+                className="uppercase text-sm font-ibmmono bg-black text-white p-2 border border-black cursor-pointer under hover:underline"
             >
                 Reset Filters
             </button>

@@ -1,7 +1,19 @@
 {
-  "files": [],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@entitites/*": ["src/entitites/*"],
+      "@features/*": ["src/features/*"],
+      "@app/*": ["src/app/*"],
+      "@shared/*": ["src/shared/*"]
+    }
+  },
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.app.json" }
+  ],
+
+  "include": ["src"]
 }

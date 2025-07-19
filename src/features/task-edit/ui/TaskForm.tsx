@@ -1,50 +1,78 @@
-import type { Task } from "../../../entitites/task/types.ts"
-import { useTasks } from "../../task-list/model/TaskContext.tsx"
-import { type FormEvent, useState } from "react"
-import {Link, useNavigate} from "react-router-dom";
+import {type FormEvent, useState} from "react";
+import type {Task} from "@entitites/task/types";
+import {formatCreatedAt} from "@shared/utils/dateFormatting";
 
 interface TaskFormProps {
-    task: Task
+    initialData: Omit<Task, 'id'> & { id?: string };
+    onSubmit: (data: Task) => void;
+    onCancel: () => void;
+    isEditMode?: boolean;
 }
 
-export const TaskForm = ({ task }: TaskFormProps) => {
-    const { updateTask } = useTasks()
-    const [formData, setFormData] = useState<Task>(task)
-    const navigate = useNavigate();
+export const TaskForm = ({
+                             initialData,
+                             onSubmit,
+                             onCancel,
+                             isEditMode = false
+                         }: TaskFormProps) => {
+    const [formData, setFormData] = useState(initialData);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        updateTask(task.id, formData);
-        navigate('/');
-    }
+        onSubmit({
+            ...formData,
+            id: formData.id || Date.now().toString()
+        });
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const {name, value} = e.target;
+        setFormData(prev => ({...prev, [name]: value}));
+    };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="max-w-xs md:max-w-2xl mx-auto">
+            <h2 className="text-3xl mb-4 font-ibmmono uppercase mt-4">
+                {isEditMode ? "EDIT TASK" : "NEW TASK"}
+            </h2>
             <div className="mb-4">
-                <label className="block font-mono text-sm mb-1">TITLE</label>
+                <label className="block font-ibmmono text-sm mb-1">TITLE</label>
                 <input
+                    name="title"
                     value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    className="w-full p-2 border font-mono"
+                    onChange={handleChange}
+                    className="w-full p-2 border border-black font-ibmmono"
+                    required
+                />
+            </div>
+            <div className="mb-4 text-gray-300">
+                <label className="block font-ibmmono text-sm mb-1">CREATED AT</label>
+                <input
+                    name="createdAt"
+                    value={formatCreatedAt(formData.createdAt)}
+                    className="w-full p-2 border border-gray-300 font-ibmmono"
+                    readOnly={true}
                 />
             </div>
 
             <div className="mb-4">
-                <label className="block font-mono text-sm mb-1">DESCRIPTION</label>
+                <label className="block font-ibmmono text-sm mb-1">DESCRIPTION</label>
                 <textarea
-                    value={formData.description || ''}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    className="w-full p-2 border font-sans min-h-[100px]"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-black font-ibmsans min-h-[100px]"
                 />
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-6">
                 <div>
-                    <label className="block font-mono text-sm mb-1">PRIORITY</label>
+                    <label className="block font-ibmmono text-sm mb-1">PRIORITY</label>
                     <select
+                        name="priority"
                         value={formData.priority}
-                        onChange={(e) => setFormData({...formData, priority: e.target.value as Task['priority']})}
-                        className="w-full p-2 border font-mono text-sm"
+                        onChange={handleChange}
+                        className="w-full p-2 border border-black font-ibmmono text-sm"
                     >
                         {['Low', 'Medium', 'High'].map(opt => (
                             <option key={opt} value={opt}>{opt}</option>
@@ -53,11 +81,12 @@ export const TaskForm = ({ task }: TaskFormProps) => {
                 </div>
 
                 <div>
-                    <label className="block font-mono text-sm mb-1">STATUS</label>
+                    <label className="block font-ibmmono text-sm mb-1">STATUS</label>
                     <select
+                        name="status"
                         value={formData.status}
-                        onChange={(e) => setFormData({...formData, status: e.target.value as Task['status']})}
-                        className="w-full p-2 border font-mono text-sm"
+                        onChange={handleChange}
+                        className="w-full p-2 border border-black font-ibmmono text-sm"
                     >
                         {['To Do', 'In Progress', 'Done'].map(opt => (
                             <option key={opt} value={opt}>{opt}</option>
@@ -66,11 +95,12 @@ export const TaskForm = ({ task }: TaskFormProps) => {
                 </div>
 
                 <div>
-                    <label className="block font-mono text-sm mb-1">CATEGORY</label>
+                    <label className="block font-ibmmono text-sm mb-1">CATEGORY</label>
                     <select
+                        name="category"
                         value={formData.category}
-                        onChange={(e) => setFormData({...formData, category: e.target.value as Task['category']})}
-                        className="w-full p-2 border font-mono text-sm"
+                        onChange={handleChange}
+                        className="w-full p-2 border border-black font-ibmmono text-sm"
                     >
                         {['Bug', 'Feature', 'Documentation', 'Refactor', 'Test'].map(opt => (
                             <option key={opt} value={opt}>{opt}</option>
@@ -82,17 +112,18 @@ export const TaskForm = ({ task }: TaskFormProps) => {
             <div className="flex gap-4">
                 <button
                     type="submit"
-                    className="font-mono px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors cursor-pointer"
+                    className="font-ibmmono px-4 py-2 border border-black bg-black text-white hover:bg-gray-800 transition-colors cursor-pointer text-sm uppercase"
                 >
-                    SAVE
+                    {isEditMode ? "UPDATE" : "CREATE"}
                 </button>
-                <Link
-                    to="/"
-                    className="font-mono px-4 py-2 border border-gray-400 hover:bg-gray-100 transition-colors cursor-pointer"
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    className="font-ibmmono px-4 py-2 border border-black hover:bg-gray-100 transition-colors cursor-pointer text-sm uppercase"
                 >
                     CANCEL
-                </Link>
+                </button>
             </div>
         </form>
-    )
-}
+    );
+};

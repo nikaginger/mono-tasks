@@ -1,18 +1,29 @@
-import {useParams} from "react-router-dom";
-import {useTasks} from "../../../features/task-list/model/TaskContext.tsx";
-import {TaskForm} from "../../../features/task-edit/ui/TaskForm.tsx";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { TaskForm } from "@features/task-edit/ui/TaskForm";
+import { updateTask } from "@features/task-list/model/tasksSlice";
+import type { RootState } from "@app/store";
 
 export const TaskDetailsPage = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { id } = useParams();
-    const { tasks } = useTasks();
-    const task = tasks.find((task) => task.id === id);
-    if (!task) return <div> Task was not found </div>
-
+    const task = useSelector((state: RootState) =>
+        state.tasks.find(t => t.id === id)
+    );
+    if (!task) return <div>Task not found</div>;
     return (
-        <div className="p-4 max-w-md mx-auto">
-            <h2 className="text-xl mb-4 uppercase font-ibmmono"> Editing task</h2>
-            <TaskForm task={task} />
-        </div>
-    )
+        <TaskForm
+            initialData={task}
+            onSubmit={(updatedTask) => {
+                dispatch(updateTask({
+                    id: updatedTask.id,
+                    updates: updatedTask
+                }));
+                navigate('/');
+            }}
+            onCancel={() => navigate('/')}
+            isEditMode
+        />
+    );
 };
