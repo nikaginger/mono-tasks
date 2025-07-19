@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
-import {HomePage} from "../../pages/home/ui/HomePage"
-import {TaskDetailsPage} from '../../pages/task-details/ui/TaskDetailsPage'
-import {TaskNewPage} from "../../pages/task-new/ui/TaskNewPage.tsx";
+import {HomePage} from "@/pages/home/ui/HomePage"
+import {TaskDetailsPage} from '@/pages/task-details/ui/TaskDetailsPage'
+import {TaskNewPage} from "@/pages/task-new/ui/TaskNewPage";
 
 export const router = createBrowserRouter([
     {
