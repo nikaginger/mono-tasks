@@ -48,8 +48,13 @@ export const TaskItem = ({task, onDelete}: TaskItemProps ) => {
                     </Link>
                 </div>
                 <button
-                    onClick={() => onDelete?.(task.id)}
-                    className="mt-auto pt-3 text-gray-500  uppercase inline-block font-ibmmono text-sm hover:text-red-600 cursor-pointer">
+                    onClick={() => {
+                        if (confirm("Are you sure you want to delete this task?")) {
+                            onDelete?.(task.id);
+                        }
+                    }}
+                    className="mt-auto pt-3 text-gray-500 uppercase inline-block font-ibmmono text-sm hover:text-red-600 cursor-pointer"
+                >
                     delete
                 </button>
             </div>
